@@ -6,7 +6,7 @@ const Appointments = () => {
         <>
             <AppointmentsTableComponent
                 mode={APPOINTMENT_MODE_OWN}
-                title="My Appointments"
+                title="Appointments"
             />
         </>
     );

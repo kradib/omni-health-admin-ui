@@ -21,6 +21,7 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import AppointmentRowComponent from "./AppointmentRowComponent";
+import Toast from "./Toast";
 
 const DEFAULT_PAGE_SIZE = 10;
 
@@ -45,6 +46,12 @@ const AppointmentsTableComponent = ({
 
     const [appointmentList, setAppointmentList] = useState([]);
 
+    const [openToast, setOpenToast] = useState(false);
+    const [toastMessage, setToastMessage] = useState("");
+    const [toastSeverity, setToastSeverity] = useState<"success" | "error">(
+        "success"
+    );
+
     const getAppointmentList = async () => {
         setLoading(true);
         const response = await getAppointments(appointmentParams, mode);
@@ -60,6 +67,16 @@ const AppointmentsTableComponent = ({
         setIsAppointmentListEmpty(false);
         setPageLimit(response.data?.data.totalPages);
         setAppointmentList(appointmentList);
+    };
+
+    const handleAppointmentCancelled = (
+        message: string,
+        severity: "success" | "error"
+    ) => {
+        setToastMessage(message);
+        setToastSeverity(severity);
+        setOpenToast(true);
+        getAppointmentList();
     };
 
     useEffect(() => {
@@ -152,6 +169,7 @@ const AppointmentsTableComponent = ({
                                 <AppointmentRowComponent
                                     key={appointment.id}
                                     appointment={appointment}
+                                    onCancel={handleAppointmentCancelled}
                                 />
                             ))}
                         </TableBody>
@@ -201,6 +219,12 @@ const AppointmentsTableComponent = ({
             </Typography>
             <LoadingComponent isLoading={loading} />
             {appointmentsTableComponent()}
+            <Toast
+                open={openToast}
+                severity={toastSeverity}
+                message={toastMessage}
+                onClose={() => setOpenToast(false)}
+            />
         </>
     );
 };
