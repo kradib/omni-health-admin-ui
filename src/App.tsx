@@ -11,6 +11,8 @@ import PublicRoute from "./components/PublicRoute";
 import { ThemeProvider } from "@mui/material/styles";
 import theme from "./theme";
 import CssBaseline from "@mui/material/CssBaseline";
+import ProtectedRoute from "./components/ProtectedRoute";
+import Appointments from "./pages/Appointments";
 
 const App = () => (
   <ThemeProvider theme={theme}>
@@ -28,6 +30,12 @@ const App = () => (
         <Route
           path={RouteConstants.FORGOT_PASSWORD_ROUTE}
           element={<ForgotPassword />}
+        />
+        <Route
+          path={RouteConstants.APPOINTMENT_ROUTE}
+          element={
+            <ProtectedRoute title="Appointments" element={<Appointments />} />
+          }
         />
       </Routes>
     </Router>

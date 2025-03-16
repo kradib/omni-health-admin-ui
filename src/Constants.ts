@@ -3,8 +3,8 @@ export const enum RouteConstants {
   REGISTER_ROUTE = "register",
   FORGOT_PASSWORD_ROUTE = "forgot-password",
   APPOINTMENT_ROUTE = "appointments",
-  DEPENDENT_APPOINTMENT_ROUTE = "dependent-appointments",
-  DOCUMENT_ROUTE = "documents",
+  DOCTOR_ROUTE = "doctors",
+  PATIENT_ROUTE = "patients",
   HELP_CENTER_ROUTE = "support",
 }
 
@@ -68,6 +68,12 @@ export const CONFIRMED_APPOINTMENT_STATUS = "Confirmed";
 export const CANCELLED_APPOINTMENT_STATUS = "Cancelled";
 
 export const EDITABLE_APPOINT_STATUS = [
-    PENDING_APPOINTMENT_STATUS,
-    CONFIRMED_APPOINTMENT_STATUS,
+  PENDING_APPOINTMENT_STATUS,
+  CONFIRMED_APPOINTMENT_STATUS,
+];
+
+export const APPOINTMENT_STATUS_OPTIONS = [
+  "All",
+  COMPLETED_APPOINTMENT_STATUS,
+  CANCELLED_APPOINTMENT_STATUS,
 ];
