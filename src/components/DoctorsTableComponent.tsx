@@ -16,8 +16,9 @@ import TableRow from "@mui/material/TableRow";
 import DoctorRowComponent from "./DoctorRowComponent";
 import Toast from "./Toast";
 import { IGetDoctorParams } from "../interface/IGetDoctorParams";
-import Button from '@mui/material/Button';
+import Button from "@mui/material/Button";
 import AddIcon from "@mui/icons-material/Add";
+import CreateOrUpdateDoctorModal from "./CreateOrUpdateDoctorModal";
 
 const DEFAULT_PAGE_SIZE = 10;
 
@@ -34,6 +35,8 @@ const DoctorsTableComponent = ({ title }: { title: string }) => {
     });
 
     const [doctorList, setDoctorList] = useState([]);
+
+    const [showCreateDoctorModal, setShowCreateDoctorModal] = useState(false);
 
     const [openToast, setOpenToast] = useState(false);
     const [toastMessage, setToastMessage] = useState("");
@@ -62,6 +65,17 @@ const DoctorsTableComponent = ({ title }: { title: string }) => {
         getDoctorList();
     }, [doctorParams]);
 
+    const handleDoctorCreated = (
+        message: string,
+        severity: "success" | "error"
+    ) => {
+        setToastMessage(message);
+        setToastSeverity(severity);
+        setOpenToast(true);
+        setShowCreateDoctorModal(false);
+        getDoctorList();
+    };
+
     const searchAndFilter = () => {
         return (
             <>
@@ -83,14 +97,8 @@ const DoctorsTableComponent = ({ title }: { title: string }) => {
                         value={doctorParams.name}
                     />
 
-                    <Button
-                        variant="contained"
-                        onClick={() => console.log("Create")}
-                        startIcon={<AddIcon />}
-                    >
-                        Create Doctor
-                    </Button>
-                </Stack >
+                    {createDoctorComponent()}
+                </Stack>
             </>
         );
     };
@@ -150,6 +158,25 @@ const DoctorsTableComponent = ({ title }: { title: string }) => {
             </>
         );
     };
+
+    const createDoctorComponent = () => (
+        <>
+            <Button
+                variant="contained"
+                onClick={() => setShowCreateDoctorModal(true)}
+                startIcon={<AddIcon />}
+            >
+                Create Doctor
+            </Button>
+            {showCreateDoctorModal && (
+                <CreateOrUpdateDoctorModal
+                    show={showCreateDoctorModal}
+                    onClose={() => setShowCreateDoctorModal(false)}
+                    onUpdated={handleDoctorCreated}
+                />
+            )}
+        </>
+    );
 
     return (
         <>

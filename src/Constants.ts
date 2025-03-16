@@ -16,7 +16,7 @@ export class ApiRoutes {
   public static DOCTOR_BASE_ROUTE = `${this.BASE_ROUTE}/doctor`;
   public static DOCUMENT_BASE_ROUTE = `${this.BASE_ROUTE}/documents`;
 
-  public static REGISTER_USER_ROUTE = `${this.USER_BASE_ROUTE}/signup`;
+  public static ADD_USER_ROUTE = `${this.BASE_ROUTE}/admin/addUser`;
   public static LOGIN_USER_ROUTE = `${this.USER_BASE_ROUTE}/signin`;
   public static FORGOT_PASSWORD_ROUTE = `${this.USER_BASE_ROUTE}/forget-password`;
   public static RESET_PASSWORD_ROUTE = `${this.USER_BASE_ROUTE}/reset-password`;

@@ -1,21 +1,23 @@
 import { ApiRoutes } from "../Constants";
 import { IRequest, RequestMethod } from "../interface/IRequest";
-import { IUserDetails } from "../interface/IUserDetails";
 import sendRequest from "./request";
 
-export const signupUser = async (userDetails: IUserDetails) => {
+export const createUser = async (userDetails: any, role: string) => {
+  const userDetailsWithRole = { ...userDetails, roles: role };
+
   const request: IRequest = {
     method: RequestMethod.POST,
-    message: userDetails,
-    url: ApiRoutes.REGISTER_USER_ROUTE,
+    message: userDetailsWithRole,
+    url: ApiRoutes.ADD_USER_ROUTE,
+    isAuthRequired: true,
   };
   const response = await sendRequest(request);
 
   if (response.status == 200) {
-    return { success: true, data: "User registration successful" };
+    return { success: true, data: "User addition successful" };
   }
   console.log(
-    `User registration failed due to status: ${
+    `User addition failed due to status: ${
       response.status
     } with error: ${JSON.stringify(response.data.data.metadata.errors[0])}`
   );
@@ -89,7 +91,7 @@ export const resetPassword = async (
   return { success: false, data: response.data.data?.metadata?.errors[0] };
 };
 
-export const updateUser = async (userDetails: IUserDetails) => {
+export const updateUser = async (userDetails: any) => {
   const request: IRequest = {
     method: RequestMethod.PATCH,
     message: userDetails,
