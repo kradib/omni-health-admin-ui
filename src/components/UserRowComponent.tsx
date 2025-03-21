@@ -22,7 +22,7 @@ const UserRowComponent: React.FC<UserRowComponentProps> = ({
                 sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
             >
                 {Object.keys(headerToFieldMap).map((key) => {
-                    return <TableCell>{headerToFieldMap[key](user)}</TableCell>;
+                    return <TableCell key={key}>{headerToFieldMap[key](user)}</TableCell>;
                 })}
                 <TableCell>
                     <IconButton onClick={() => onEditClick(user)}>

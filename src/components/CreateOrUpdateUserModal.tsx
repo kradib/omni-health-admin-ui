@@ -6,6 +6,7 @@ import { useForm } from "react-hook-form";
 import FormInput from "./FormInput";
 import dayjs from "dayjs";
 import { capitalize } from "../utils/Utils";
+import { BLOOD_GROUP_TYPES } from "../Constants";
 
 interface CreateOrUpdateUserModalProps {
     show: boolean;
@@ -52,6 +53,92 @@ const CreateOrUpdateUserModal: React.FC<CreateOrUpdateUserModalProps> = ({
         }
         setLoading(false);
         onUpdated(response.data.message, response.success ? "success" : "error");
+    };
+
+    const getDoctorSpecificFields = () => {
+        return (
+            <>
+                <FormInput
+                    control={control}
+                    rules={{ required: "Specialization is required" }}
+                    name="major"
+                    label="Specialization"
+                />
+
+                <FormInput
+                    control={control}
+                    rules={{ required: "Location is required" }}
+                    name="location"
+                    label="Location"
+                />
+            </>
+        );
+    };
+
+    const getPatientSpecificFields = () => {
+        return (
+            <>
+                <FormInput
+                    control={control}
+                    rules={{}}
+                    name="bloodGroup"
+                    label="Blood Group"
+                    type="options"
+                    options={BLOOD_GROUP_TYPES}
+                />
+                <FormInput
+                    control={control}
+                    rules={{
+                        type: "number",
+                        min: {
+                            value: 50,
+                            message: "Height must be at least 50 cm",
+                        },
+                        max: {
+                            value: 300,
+                            message: "Height must be at most 300 cm",
+                        },
+                        validate: (value: any) =>
+                            !value ||
+                            Number.isInteger(Number(value)) ||
+                            "Must be a whole number",
+                    }}
+                    type="number"
+                    name="height"
+                    label="Height (in cm)"
+                />
+                <FormInput
+                    control={control}
+                    rules={{
+                        type: "number",
+                        min: {
+                            value: 10,
+                            message: "Weight must be at least 10 kg",
+                        },
+                        max: {
+                            value: 500,
+                            message: "Weight must be at most 500 kg",
+                        },
+                    }}
+                    type="number"
+                    name="weight"
+                    label="Weight (in kg)"
+                />
+                <FormInput
+                    control={control}
+                    rules={{}}
+                    name="firstGuardianUserId"
+                    label="First Guardian User ID"
+                />
+
+                <FormInput
+                    control={control}
+                    rules={{}}
+                    name="secondGuardianUserId"
+                    label="Second Guardian User ID"
+                />
+            </>
+        );
     };
 
     return (
@@ -139,19 +226,8 @@ const CreateOrUpdateUserModal: React.FC<CreateOrUpdateUserModalProps> = ({
                     disabled={!isCreateMode}
                 />
 
-                <FormInput
-                    control={control}
-                    rules={{ required: "Specialization is required" }}
-                    name="major"
-                    label="Specialization"
-                />
-
-                <FormInput
-                    control={control}
-                    rules={{ required: "Location is required" }}
-                    name="location"
-                    label="Location"
-                />
+                {role == "doctor" && getDoctorSpecificFields()}
+                {role == "patient" && getPatientSpecificFields()}
 
                 <Button
                     variant="contained"

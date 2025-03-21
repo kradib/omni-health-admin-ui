@@ -14,6 +14,7 @@ import CssBaseline from "@mui/material/CssBaseline";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Appointments from "./pages/Appointments";
 import Doctors from "./pages/Doctors";
+import Patients from "./pages/Patients";
 
 const App = () => (
   <ThemeProvider theme={theme}>
@@ -42,6 +43,12 @@ const App = () => (
           path={RouteConstants.DOCTOR_ROUTE}
           element={
             <ProtectedRoute title="Doctors" element={<Doctors />} />
+          }
+        />
+        <Route
+          path={RouteConstants.PATIENT_ROUTE}
+          element={
+            <ProtectedRoute title="Patients" element={<Patients />} />
           }
         />
       </Routes>
