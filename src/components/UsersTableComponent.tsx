@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import Typography from "@mui/material/Typography";
-import { getDoctors } from "../api/doctor";
+import { getUsers } from "../api/user";
 import LoadingComponent from "./LoadingComponent";
 import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
@@ -13,30 +13,43 @@ import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
-import DoctorRowComponent from "./DoctorRowComponent";
+import UserRowComponent from "./UserRowComponent";
 import Toast from "./Toast";
-import { IGetDoctorParams } from "../interface/IGetDoctorParams";
+import { IGetUserParams } from "../interface/IGetUserParams";
 import Button from "@mui/material/Button";
 import AddIcon from "@mui/icons-material/Add";
-import CreateOrUpdateDoctorModal from "./CreateOrUpdateDoctorModal";
+import CreateOrUpdateUserModal from "./CreateOrUpdateUserModal";
+import { capitalize } from "../utils/Utils";
 
 const DEFAULT_PAGE_SIZE = 10;
 
-const TABLE_HEADERS = ["Name", "Specialization", "Location", "View"];
+interface UsersTableComponentProps {
+    title: string;
+    role: string;
+    headersToFieldMap: any;
+}
 
-const DoctorsTableComponent = ({ title }: { title: string }) => {
-    const [isDoctorListEmpty, setIsDoctorListEmpty] = useState(false);
+const UsersTableComponent: React.FC<UsersTableComponentProps> = ({
+    title,
+    role,
+    headersToFieldMap,
+}) => {
+    const [isUserListEmpty, setIsUserListEmpty] = useState(false);
     const [loading, setLoading] = useState(false);
     const [pageLimit, setPageLimit] = useState(0);
-    const [doctorParams, setDoctorParams] = useState<IGetDoctorParams>({
+    const [userParams, setUserParams] = useState<IGetUserParams>({
         name: "",
-        page: 1,
-        pageSize: DEFAULT_PAGE_SIZE,
+        page: 0,
+        size: DEFAULT_PAGE_SIZE,
+        roles: role,
     });
 
-    const [doctorList, setDoctorList] = useState([]);
+    const [userList, setUserList] = useState([]);
 
-    const [showCreateDoctorModal, setShowCreateDoctorModal] = useState(false);
+    const [showCreateUserModal, setShowCreateUserModal] = useState(false);
+
+    const [showUpdateUserModal, setShowUpdateUserModal] = useState(false);
+    const [userSelected, setUserSelected] = useState<any>(undefined);
 
     const [openToast, setOpenToast] = useState(false);
     const [toastMessage, setToastMessage] = useState("");
@@ -44,36 +57,37 @@ const DoctorsTableComponent = ({ title }: { title: string }) => {
         "success"
     );
 
-    const getDoctorList = async () => {
+    const getUserList = async () => {
         setLoading(true);
-        const response = await getDoctors(doctorParams);
+        const response = await getUsers(userParams);
         setLoading(false);
-        let docList = [];
+        let usrList = [];
         if (response.success) {
-            docList = response.data?.data.doctorDetails;
+            usrList = response.data?.data.userDetailWithRole;
         }
-        if (!docList || docList.length === 0) {
-            setIsDoctorListEmpty(true);
+        if (!usrList || usrList.length === 0) {
+            setIsUserListEmpty(true);
             return;
         }
-        setIsDoctorListEmpty(false);
+        setIsUserListEmpty(false);
         setPageLimit(response.data?.data.totalPages);
-        setDoctorList(docList);
+        setUserList(usrList);
     };
 
     useEffect(() => {
-        getDoctorList();
-    }, [doctorParams]);
+        getUserList();
+    }, [userParams]);
 
-    const handleDoctorCreated = (
+    const handleUserCreated = (
         message: string,
         severity: "success" | "error"
     ) => {
         setToastMessage(message);
         setToastSeverity(severity);
         setOpenToast(true);
-        setShowCreateDoctorModal(false);
-        getDoctorList();
+        setShowCreateUserModal(false);
+        setShowUpdateUserModal(false);
+        getUserList();
     };
 
     const searchAndFilter = () => {
@@ -85,41 +99,52 @@ const DoctorsTableComponent = ({ title }: { title: string }) => {
                     sx={{ justifyContent: "space-between" }}
                 >
                     <TextField
-                        id="doctorName"
+                        id="userName"
                         label="Search by name"
                         onChange={(e) =>
-                            setDoctorParams({
-                                ...doctorParams,
+                            setUserParams({
+                                ...userParams,
                                 name: e.target.value,
                             })
                         }
                         variant="outlined"
-                        value={doctorParams.name}
+                        value={userParams.name}
                     />
 
-                    {createDoctorComponent()}
+                    {createUserComponent()}
                 </Stack>
             </>
         );
     };
 
-    const doctorTable = () => {
+    const userTable = () => {
         return (
             <>
                 <TableContainer component={Paper}>
                     <Table sx={{ minWidth: 650 }} size="small" aria-label="appointments">
                         <TableHead>
                             <TableRow sx={{ fontWeight: "bold" }}>
-                                {TABLE_HEADERS.map((header) => (
+                                {Object.keys(headersToFieldMap).map((header: any) => (
                                     <TableCell key={header} sx={{ fontWeight: "bold" }}>
                                         {header}
                                     </TableCell>
                                 ))}
+                                <TableCell key="view" sx={{ fontWeight: "bold" }}>
+                                    View/ Edit
+                                </TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {doctorList.map((doctor: any) => (
-                                <DoctorRowComponent key={doctor.id} doctor={doctor} />
+                            {userList.map((user: any) => (
+                                <UserRowComponent
+                                    key={user.userDetail.id}
+                                    user={user.userDetail}
+                                    headerToFieldMap={headersToFieldMap}
+                                    onEditClick={(user: any) => {
+                                        setUserSelected(user);
+                                        setShowUpdateUserModal(true);
+                                    }}
+                                />
                             ))}
                         </TableBody>
                     </Table>
@@ -130,7 +155,7 @@ const DoctorsTableComponent = ({ title }: { title: string }) => {
                         count={pageLimit}
                         color="primary"
                         onChange={(_event, page) =>
-                            setDoctorParams({ ...doctorParams, page: page - 1 })
+                            setUserParams({ ...userParams, page: page - 1 })
                         }
                     />
                 </Box>
@@ -138,41 +163,58 @@ const DoctorsTableComponent = ({ title }: { title: string }) => {
         );
     };
 
-    const noDoctorsMessage = () => {
+    const noUsersMessage = () => {
         return (
             <>
                 <Typography variant="h6" sx={{ textAlign: "center" }}>
-                    You have no appointments for the selected dates
+                    You have no {role} for the search parameters
                 </Typography>
             </>
         );
     };
 
-    const doctorsTableComponent = () => {
+    const usersTableComponent = () => {
         return (
             <>
                 <Stack spacing={2}>
                     {searchAndFilter()}
-                    {isDoctorListEmpty ? noDoctorsMessage() : doctorTable()}
+                    {isUserListEmpty ? noUsersMessage() : userTable()}
                 </Stack>
             </>
         );
     };
 
-    const createDoctorComponent = () => (
+    const createUserComponent = () => (
         <>
             <Button
                 variant="contained"
-                onClick={() => setShowCreateDoctorModal(true)}
+                onClick={() => setShowCreateUserModal(true)}
                 startIcon={<AddIcon />}
             >
-                Create Doctor
+                Create {capitalize(role)}
             </Button>
-            {showCreateDoctorModal && (
-                <CreateOrUpdateDoctorModal
-                    show={showCreateDoctorModal}
-                    onClose={() => setShowCreateDoctorModal(false)}
-                    onUpdated={handleDoctorCreated}
+            {showCreateUserModal && (
+                <CreateOrUpdateUserModal
+                    show={showCreateUserModal}
+                    onClose={() => setShowCreateUserModal(false)}
+                    onUpdated={handleUserCreated}
+                    role={role}
+                    mode="create"
+                />
+            )}
+        </>
+    );
+
+    const updateUserComponent = () => (
+        <>
+            {showUpdateUserModal && (
+                <CreateOrUpdateUserModal
+                    show={showUpdateUserModal}
+                    onClose={() => setShowUpdateUserModal(false)}
+                    onUpdated={handleUserCreated}
+                    role={role}
+                    user={userSelected}
+                    mode="update"
                 />
             )}
         </>
@@ -184,7 +226,8 @@ const DoctorsTableComponent = ({ title }: { title: string }) => {
                 {title}
             </Typography>
             <LoadingComponent isLoading={loading} />
-            {doctorsTableComponent()}
+            {usersTableComponent()}
+            {updateUserComponent()}
 
             <Toast
                 open={openToast}
@@ -196,4 +239,4 @@ const DoctorsTableComponent = ({ title }: { title: string }) => {
     );
 };
 
-export default DoctorsTableComponent;
+export default UsersTableComponent;

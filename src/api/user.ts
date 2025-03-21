@@ -1,4 +1,5 @@
 import { ApiRoutes } from "../Constants";
+import { IGetUserParams } from "../interface/IGetUserParams";
 import { IRequest, RequestMethod } from "../interface/IRequest";
 import sendRequest from "./request";
 
@@ -14,10 +15,32 @@ export const createUser = async (userDetails: any, role: string) => {
   const response = await sendRequest(request);
 
   if (response.status == 200) {
-    return { success: true, data: "User addition successful" };
+    return { success: true, data: { message: "User addition successful" } };
   }
   console.log(
     `User addition failed due to status: ${
+      response.status
+    } with error: ${JSON.stringify(response.data.data.metadata.errors[0])}`
+  );
+  return { success: false, data: response.data.data?.metadata?.errors[0] };
+};
+
+export const updateUser = async (userDetails: any, role: string, userId: string) => {
+  const userDetailsWithRole = { ...userDetails, roles: role };
+
+  const request: IRequest = {
+    method: RequestMethod.PUT,
+    message: userDetailsWithRole,
+    url: `${ApiRoutes.UPDATE_USER_ROUTE}/${userId}`,
+    isAuthRequired: true,
+  };
+  const response = await sendRequest(request);
+
+  if (response.status == 200) {
+    return { success: true, data: { message: "User updation successful" } };
+  }
+  console.log(
+    `User updation failed due to status: ${
       response.status
     } with error: ${JSON.stringify(response.data.data.metadata.errors[0])}`
   );
@@ -94,29 +117,22 @@ export const resetPassword = async (
   );
   return { success: false, data: response.data.data?.metadata?.errors[0] };
 };
-
-export const updateUser = async (userDetails: any) => {
+export const getUsers = async (params: IGetUserParams) => {
   const request: IRequest = {
-    method: RequestMethod.PATCH,
-    message: userDetails,
-    url: ApiRoutes.USER_BASE_ROUTE,
+    method: RequestMethod.GET,
+    url: ApiRoutes.GET_USER_ROUTE,
     isAuthRequired: true,
+    queryParams: params,
   };
-  const response = await sendRequest(request);
 
+  const response = await sendRequest(request);
   if (response.status == 200) {
-    return {
-      success: true,
-      data: {
-        message: "User update successful",
-        userDetails: response.data.data.userDetail,
-      },
-    };
+    return { success: true, data: response.data };
   }
   console.log(
-    `User registration failed due to status: ${
+    `Doctor fetching failed due to status: ${
       response.status
-    } with error: ${JSON.stringify(response.data.data.metadata.errors[0])}`
+    } with error: ${JSON.stringify(response)}`
   );
   return { success: false, data: response.data.data?.metadata?.errors[0] };
 };

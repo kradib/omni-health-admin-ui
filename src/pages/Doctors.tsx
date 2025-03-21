@@ -1,13 +1,21 @@
-import DoctorsTableComponent from "../components/DoctorsTableComponent";
+import UsersTableComponent from "../components/UsersTableComponent";
 
-const Appointments = () => {
+const TABLE_HEADERS = {
+    Name: (user: any) => `${user.firstName} ${user.lastName}`,
+    Specialization: (user: any) => `${user.major}`,
+    Location: (user: any) => `${user.location}`
+};
+
+const Doctors = () => {
     return (
         <>
-            <DoctorsTableComponent
+            <UsersTableComponent
                 title="Doctors"
+                role="doctor"
+                headersToFieldMap={TABLE_HEADERS}
             />
         </>
     );
 };
 
-export default Appointments;
+export default Doctors;

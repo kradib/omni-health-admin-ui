@@ -1,34 +1,55 @@
 import React, { useState } from "react";
 import ModalComponent from "./ModalComponent";
 import Button from "@mui/material/Button";
-import { createUser } from "../api/user";
+import { createUser, updateUser } from "../api/user";
 import { useForm } from "react-hook-form";
 import FormInput from "./FormInput";
+import dayjs from "dayjs";
+import { capitalize } from "../utils/Utils";
 
-interface CreateOrUpdateDoctorModalProps {
+interface CreateOrUpdateUserModalProps {
     show: boolean;
     onUpdated: any;
     onClose: any;
-    doctor?: any;
+    role: string;
+    user?: any;
+    mode: string;
 }
 
-const CreateOrUpdateDoctorModal: React.FC<CreateOrUpdateDoctorModalProps> = ({
+const CreateOrUpdateUserModal: React.FC<CreateOrUpdateUserModalProps> = ({
     show,
     onUpdated,
     onClose,
-    doctor,
+    role,
+    user,
+    mode,
 }) => {
+    const isCreateMode = mode == "create";
+
+    const defaultUser = user
+        ? {
+            ...user,
+            dateOfBirth: dayjs(user.dateOfBirth),
+        }
+        : user;
+
     const {
         control,
         handleSubmit,
         formState: { isValid },
-    } = useForm({ mode: "onChange", defaultValues: doctor });
+    } = useForm({ mode: "onChange", defaultValues: defaultUser });
 
     const [loading, setLoading] = useState(false);
 
     const handleCreateOrUpdate = async (data: any) => {
+        let response;
+
         setLoading(true);
-        const response = await createUser(data, "doctor");
+        if (isCreateMode) {
+            response = await createUser(data, role);
+        } else {
+            response = await updateUser(data, role, data.id);
+        }
         setLoading(false);
         onUpdated(response.data.message, response.success ? "success" : "error");
     };
@@ -38,24 +59,28 @@ const CreateOrUpdateDoctorModal: React.FC<CreateOrUpdateDoctorModalProps> = ({
             <ModalComponent
                 open={show}
                 onClose={onClose}
-                title={"Create Doctor"}
+                title={`${capitalize(mode)} ${capitalize(role)}`}
                 aria-labelledby="modal-modal-title"
                 aria-describedby="modal-modal-description"
             >
-                <FormInput
-                    control={control}
-                    rules={{ required: "Username is required" }}
-                    name="username"
-                    label="Username"
-                />
+                {isCreateMode && (
+                    <>
+                        <FormInput
+                            control={control}
+                            rules={{ required: "Username is required" }}
+                            name="username"
+                            label="Username"
+                        />
 
-                <FormInput
-                    control={control}
-                    rules={{ required: "Password is required" }}
-                    name="password"
-                    label="Password"
-                    type="password"
-                />
+                        <FormInput
+                            control={control}
+                            rules={{ required: "Password is required" }}
+                            name="password"
+                            label="Password"
+                            type="password"
+                        />
+                    </>
+                )}
 
                 <FormInput
                     control={control}
@@ -107,6 +132,15 @@ const CreateOrUpdateDoctorModal: React.FC<CreateOrUpdateDoctorModalProps> = ({
 
                 <FormInput
                     control={control}
+                    rules={{ required: "Date of Birth is required" }}
+                    name="dateOfBirth"
+                    label="Date Of Birth"
+                    type="date"
+                    disabled={!isCreateMode}
+                />
+
+                <FormInput
+                    control={control}
                     rules={{ required: "Specialization is required" }}
                     name="major"
                     label="Specialization"
@@ -133,4 +167,4 @@ const CreateOrUpdateDoctorModal: React.FC<CreateOrUpdateDoctorModalProps> = ({
     );
 };
 
-export default CreateOrUpdateDoctorModal;
+export default CreateOrUpdateUserModal;

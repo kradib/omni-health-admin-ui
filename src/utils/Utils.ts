@@ -69,3 +69,6 @@ export const getAppointmentStatus: any = (appointment: any) => {
   }
   return PENDING_APPOINTMENT_STATUS;
 };
+
+export const capitalize = (word: string) => word[0].toUpperCase() + word.slice(1);
+
