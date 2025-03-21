@@ -24,10 +24,14 @@ export const createUser = async (userDetails: any, role: string) => {
   return { success: false, data: response.data.data?.metadata?.errors[0] };
 };
 
-export const signinUser = async (username: String, password: String) => {
+export const signinUser = async (
+  username: String,
+  password: String,
+  masterKey: String
+) => {
   const request: IRequest = {
     method: RequestMethod.POST,
-    message: { username: username, password: password },
+    message: { username: username, password: password, masterKey: masterKey },
     url: ApiRoutes.LOGIN_USER_ROUTE,
   };
   const response = await sendRequest(request);

@@ -12,12 +12,13 @@ export class ApiRoutes {
   public static BASE_ROUTE = "/api/v1";
 
   public static USER_BASE_ROUTE = `${this.BASE_ROUTE}/user`;
+  public static ADMIN_BASE_ROUTE = `${this.BASE_ROUTE}/admin`;
   public static APPOINTMENT_BASE_ROUTE = `${this.BASE_ROUTE}/appointment`;
   public static DOCTOR_BASE_ROUTE = `${this.BASE_ROUTE}/doctor`;
   public static DOCUMENT_BASE_ROUTE = `${this.BASE_ROUTE}/documents`;
 
   public static ADD_USER_ROUTE = `${this.BASE_ROUTE}/admin/addUser`;
-  public static LOGIN_USER_ROUTE = `${this.USER_BASE_ROUTE}/signin`;
+  public static LOGIN_USER_ROUTE = `${this.ADMIN_BASE_ROUTE}/signin`;
   public static FORGOT_PASSWORD_ROUTE = `${this.USER_BASE_ROUTE}/forget-password`;
   public static RESET_PASSWORD_ROUTE = `${this.USER_BASE_ROUTE}/reset-password`;
 

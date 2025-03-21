@@ -36,7 +36,7 @@ const Login = () => {
 
     const handleLogin = async (data: any) => {
         setLoading(true);
-        const response = await signinUser(data.username, data.password);
+        const response = await signinUser(data.username, data.password, data.masterKey);
         setLoading(false);
 
         if (response.success) {
@@ -94,7 +94,13 @@ const Login = () => {
                             label="Password"
                             type="password"
                         />
-
+                        <FormInput
+                            control={control}
+                            rules={{ required: "Master Key is required" }}
+                            name="masterKey"
+                            label="Master Key"
+                            type="password"
+                        />
                         <Box
                             sx={{
                                 display: "flex",
