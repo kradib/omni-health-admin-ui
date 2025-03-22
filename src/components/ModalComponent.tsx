@@ -67,6 +67,7 @@ const ModalComponent: React.FC<ModalComponentProps> = ({
                                 "&::-webkit-scrollbar": {
                                     display: "none", // Hide scrollbar for Webkit browsers (Chrome, Edge, Safari)
                                 },
+                                p: 1
                             }}
                         >
                             <Stack spacing={2}> {children} </Stack>
