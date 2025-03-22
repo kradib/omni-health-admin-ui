@@ -1,7 +1,6 @@
 export const enum RouteConstants {
   LOGIN_ROUTE = "login",
   REGISTER_ROUTE = "register",
-  FORGOT_PASSWORD_ROUTE = "forgot-password",
   APPOINTMENT_ROUTE = "appointments",
   DOCTOR_ROUTE = "doctors",
   PATIENT_ROUTE = "patients",
@@ -20,7 +19,6 @@ export class ApiRoutes {
   public static UPDATE_USER_ROUTE = `${this.ADMIN_BASE_ROUTE}/updateUser`;
   public static GET_USER_ROUTE = `${this.ADMIN_BASE_ROUTE}/listUsers`;
   public static LOGIN_USER_ROUTE = `${this.ADMIN_BASE_ROUTE}/signin`;
-  public static FORGOT_PASSWORD_ROUTE = `${this.USER_BASE_ROUTE}/forget-password`;
   public static RESET_PASSWORD_ROUTE = `${this.USER_BASE_ROUTE}/reset-password`;
 
   public static APPOINTMENT_SLOT_ROUTE = `${this.APPOINTMENT_BASE_ROUTE}/slots`;

@@ -2,7 +2,6 @@ import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
 import Box from "@mui/material/Box";
-import Link from "@mui/material/Link";
 import { useState } from "react";
 import { AUTH_TOKEN_KEY, RouteConstants, USER_DETAILS_KEY } from "../Constants";
 import { signinUser } from "../api/user";
@@ -36,7 +35,11 @@ const Login = () => {
 
     const handleLogin = async (data: any) => {
         setLoading(true);
-        const response = await signinUser(data.username, data.password, data.masterKey);
+        const response = await signinUser(
+            data.username,
+            data.password,
+            data.masterKey
+        );
         setLoading(false);
 
         if (response.success) {
@@ -101,21 +104,6 @@ const Login = () => {
                             label="Master Key"
                             type="password"
                         />
-                        <Box
-                            sx={{
-                                display: "flex",
-                                justifyContent: "flex-end",
-                            }}
-                        >
-                            <Typography variant="subtitle1">
-                                <Link
-                                    href={RouteConstants.FORGOT_PASSWORD_ROUTE}
-                                    underline="none"
-                                >
-                                    Forgot Password?
-                                </Link>
-                            </Typography>
-                        </Box>
 
                         <Button
                             variant="contained"

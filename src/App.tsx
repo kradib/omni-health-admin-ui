@@ -5,7 +5,6 @@ import {
   Navigate,
 } from "react-router-dom";
 import Login from "./pages/Login";
-import ForgotPassword from "./pages/ForgotPassword";
 import { RouteConstants } from "./Constants";
 import PublicRoute from "./components/PublicRoute";
 import { ThemeProvider } from "@mui/material/styles";
@@ -28,10 +27,6 @@ const App = () => (
         <Route
           path={RouteConstants.LOGIN_ROUTE}
           element={<PublicRoute element={<Login />} />}
-        />
-        <Route
-          path={RouteConstants.FORGOT_PASSWORD_ROUTE}
-          element={<ForgotPassword />}
         />
         <Route
           path={RouteConstants.APPOINTMENT_ROUTE}
