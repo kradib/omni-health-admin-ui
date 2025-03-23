@@ -3,6 +3,7 @@ import UsersTableComponent from "../components/UsersTableComponent";
 
 const TABLE_HEADERS = {
     Name: (user: any) => `${user.firstName} ${user.lastName}`,
+    Gender: (user: any) => `${user.gender}`,
     "Blood Group": (user: any) => `${user.bloodGroup}`,
     "Age (years)": (user: any) =>
         `${dayjs().diff(dayjs(user.dateOfBirth), "year")}`,

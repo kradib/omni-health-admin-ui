@@ -6,7 +6,7 @@ import { useForm } from "react-hook-form";
 import FormInput from "./FormInput";
 import dayjs from "dayjs";
 import { capitalize } from "../utils/Utils";
-import { BLOOD_GROUP_TYPES } from "../Constants";
+import { BLOOD_GROUP_TYPES, GENDER_OPTIONS } from "../Constants";
 
 interface CreateOrUpdateUserModalProps {
     show: boolean;
@@ -181,6 +181,16 @@ const CreateOrUpdateUserModal: React.FC<CreateOrUpdateUserModalProps> = ({
                     rules={{ required: "Last name is required" }}
                     name="lastName"
                     label="Last Name"
+                />
+
+                <FormInput
+                    control={control}
+                    rules={{ required: "Gender is required" }}
+                    name="gender"
+                    label="Gender"
+                    type="options"
+                    options={GENDER_OPTIONS}
+                    disabled={!isCreateMode}
                 />
 
                 <FormInput
