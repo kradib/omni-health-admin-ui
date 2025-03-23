@@ -11,6 +11,7 @@ import { DoctorIcon } from "../icons/DoctorIcon";
 import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
 import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined";
 import AutorenewOutlinedIcon from "@mui/icons-material/AutorenewOutlined";
+import FemaleOutlinedIcon from '@mui/icons-material/FemaleOutlined';
 import { getAppointmentStatus } from "../utils/Utils";
 
 interface ViewAppointmentModalProps {
@@ -65,6 +66,16 @@ const ViewAppointmentModal: React.FC<ViewAppointmentModalProps> = ({
                     <PersonOutlineOutlinedIcon />
                     <Typography variant="body1">{`${appointment.userDetail?.firstName} ${appointment.userDetail?.lastName}`}</Typography>
                 </Stack>
+
+                <Stack
+                    sx={{ justifyContent: "left", alignItems: "center" }}
+                    direction="row"
+                    spacing={2}
+                >
+                    <FemaleOutlinedIcon />
+                    <Typography variant="body1">{`${appointment.userDetail?.gender}`}</Typography>
+                </Stack>
+
 
                 <Stack
                     sx={{ justifyContent: "left", alignItems: "center" }}
