@@ -22,10 +22,17 @@ export const createUser = async (userDetails: any, role: string) => {
       response.status
     } with error: ${JSON.stringify(response.data.data.metadata.errors[0])}`
   );
-  return { success: false, data: response.data.data?.metadata?.errors[0] };
+  return {
+    success: false,
+    data: { message: response.data.data?.metadata?.errors[0] },
+  };
 };
 
-export const updateUser = async (userDetails: any, role: string, userId: string) => {
+export const updateUser = async (
+  userDetails: any,
+  role: string,
+  userId: string
+) => {
   const userDetailsWithRole = { ...userDetails, roles: role };
 
   const request: IRequest = {
@@ -44,7 +51,7 @@ export const updateUser = async (userDetails: any, role: string, userId: string)
       response.status
     } with error: ${JSON.stringify(response.data.data.metadata.errors[0])}`
   );
-  return { success: false, data: response.data.data?.metadata?.errors[0] };
+  return { success: false, data: { message: response.data.data?.metadata?.errors[0] } };
 };
 
 export const signinUser = async (
